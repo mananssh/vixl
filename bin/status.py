@@ -31,7 +31,7 @@ def _load(rel):
 def _count_raw():
     d = os.path.join(ROOT, "assets", "raw")
     exts = {".mp4", ".mov", ".avi", ".mkv", ".webm", ".m4v",
-            ".jpg", ".jpeg", ".png", ".heic", ".webp",
+            ".jpg", ".jpeg", ".png", ".heic", ".webp", ".avif",
             ".mp3", ".wav", ".m4a", ".flac", ".aac"}
     if not os.path.isdir(d):
         return 0, 0, 0
@@ -40,7 +40,7 @@ def _count_raw():
         e = os.path.splitext(f)[1].lower()
         if e in {".mp4", ".mov", ".avi", ".mkv", ".webm", ".m4v"}:
             v += 1
-        elif e in {".jpg", ".jpeg", ".png", ".heic", ".webp"}:
+        elif e in {".jpg", ".jpeg", ".png", ".heic", ".webp", ".avif"}:
             i += 1
         elif e in {".mp3", ".wav", ".m4a", ".flac", ".aac"}:
             a += 1
@@ -76,9 +76,11 @@ def main():
     v, i, a = _count_raw()
     print(f"\n RAW MEDIA (assets/raw): {v} video, {i} image, {a} audio")
 
+    brief = _load("work/brief.json")
     manifest = _load("work/manifest.json")
     beats = _load("work/beats.json")
     edl = _load("work/edl.json")
+    treatment = os.path.exists(os.path.join(ROOT, "work", "treatment.md"))
     preview = _latest("work/previews")
     final = _latest("out")
 
@@ -92,6 +94,8 @@ def main():
           + (f"~{beats.get('tempo')} BPM, {len(beats.get('beats', []))} beats" if beats else "not run — run beat-map"))
     print(f"   [{mark(edl)}] 3. edit-plan   "
           + (f"{len(edl.get('clips', []))} clips in work/edl.json" if edl else "not built — run edit-plan"))
+    print(f"   [{mark(treatment)}] 3b. treatment  "
+          + ("work/treatment.md (review before render)" if treatment else "none yet — describe_edl.py"))
     print(f"   [{mark(preview)}] 4. preview     " + (preview or "none yet — render --preview"))
     print(f"   [{mark(final)}] 5. final       " + (final or "none yet — render (after sign-off)"))
 
@@ -107,8 +111,10 @@ def main():
         nxt = "Run beat-map:  python bin/detect_beats.py assets/raw/<song>"
     elif not edl:
         nxt = "Design the edit (edit-plan). Draft:  python bin/build_edl.py  then refine."
+    elif not treatment:
+        nxt = "Write the treatment for review:  python bin/describe_edl.py  (then show the user)"
     elif not preview:
-        nxt = "Render a preview:  python bin/render_edl.py work/edl.json --preview  (then get sign-off)"
+        nxt = "Get sign-off on work/treatment.md, then preview:  python bin/render_edl.py work/edl.json --preview"
     elif not final:
         nxt = "Get sign-off on the preview, then final:  python bin/render_edl.py work/edl.json"
     else:

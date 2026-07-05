@@ -10,6 +10,22 @@ This is where taste happens. **Read [docs/EDITING_STYLE.md](../../../docs/EDITIN
 
 ## Inputs
 - `work/manifest.json` (footage), `work/beats.json` (rhythm), `config/project.json` (locked settings).
+- `work/brief.json` if it exists (the user's intent — from the `creative-brief`
+  skill). Let it drive shot selection (`must_include`/`avoid`/`hero_moment`),
+  captions, title text, tone and target length. If there's no brief and the ask is
+  vague, run `creative-brief` first.
+
+## Output for sign-off: the treatment (screenplay)
+The EDL is precise but hard to picture. **Always emit a human-readable treatment
+and get the user's OK on it before rendering clips** — editing prose is free,
+re-encoding is not.
+```powershell
+$PY = "C:\Users\manan\AppData\Local\Programs\Python\Python312\python.exe"
+& $PY bin/describe_edl.py            # work/edl.json -> work/treatment.md (+ prints it)
+```
+`build_edl.py` writes `work/treatment.md` automatically; re-run `describe_edl.py`
+after every EDL change to refresh it. Show it to the user, take their notes, edit
+the EDL, refresh, repeat — *then* render.
 
 ## Process (how a pro builds the timeline)
 1. **Pick the song window.** From `beats.json.sections`, choose the strongest
@@ -108,4 +124,5 @@ avoid soft takes, and `scene_cuts` to split long clips into shots.
 
 ## Next
 → `subject-cutout` / `color-grade` / `motion-fx` / `sfx-overlays` as referenced,
+→ refresh `work/treatment.md` (`describe_edl.py`) and get sign-off,
 then `render` (preview first!).

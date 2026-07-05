@@ -30,6 +30,7 @@ def main():
     ap.add_argument("--manifest", default=os.path.join(ROOT, "work", "manifest.json"))
     ap.add_argument("--beats", default=os.path.join(ROOT, "work", "beats.json"))
     ap.add_argument("--project", default=os.path.join(ROOT, "config", "project.json"))
+    ap.add_argument("--brief", default=os.path.join(ROOT, "work", "brief.json"))
     ap.add_argument("--out", default=os.path.join(ROOT, "work", "edl.json"))
     ap.add_argument("--section", default=None)
     ap.add_argument("--target", type=float, default=None)
@@ -66,6 +67,9 @@ def main():
     beats = load(args.beats)
     proj = load(args.project)
     fmt = proj["format"]
+    brief = load(args.brief) if os.path.exists(args.brief) else {}
+    if brief:
+        print(f"[build_edl] using work/brief.json (title={brief.get('title')!r}).")
 
     assets = [a for a in manifest["assets"] if a["type"] in ("video", "image")]
     if not assets:
@@ -82,12 +86,14 @@ def main():
 
     all_beats = beats["beats"]
     downbeats = set(beats.get("downbeats", all_beats))
-    target = args.target or proj["length"]["target_max_seconds"]
+    target = (args.target or brief.get("target_seconds")
+              or proj["length"]["target_max_seconds"])
 
     secs = beats.get("sections", [])
     section = None
-    if args.section:
-        section = next((s for s in secs if s.get("label") == args.section), None)
+    want_section = args.section or brief.get("song_section")
+    if want_section and want_section not in ("full",):
+        section = next((s for s in secs if s.get("label") == want_section), None)
     if not section:
         hi = [s for s in secs if s.get("energy") == "high"]
         section = max(hi, key=lambda s: s["end"] - s["start"]) if hi else None
@@ -145,7 +151,8 @@ def main():
     edl = {
         "edl_version": 2,
         "meta": {"width": fmt["width"], "height": fmt["height"],
-                 "fps": fmt["fps"], "title": proj.get("title", "edit")},
+                 "fps": fmt["fps"],
+                 "title": brief.get("title") or proj.get("title", "edit")},
         "audio": {"src": song, "start": round(audio_start, 3),
                   "fade_in": 0.4, "fade_out": 1.2, "loudnorm": True, "duck_with": None},
         "clips": clips,
@@ -158,8 +165,20 @@ def main():
     print(f"[build_edl] drafted {len(clips)} clips | ~{timeline:.1f}s | "
           f"audio.start={audio_start:.2f}s | section={section['label'] if section else 'n/a'}")
     print(f"[build_edl] -> {os.path.relpath(args.out, ROOT)}")
+
+    # auto-generate the human-readable treatment/screenplay for review
+    try:
+        import subprocess
+        subprocess.run([sys.executable, os.path.join(ROOT, "bin", "describe_edl.py"),
+                        args.out, "--quiet"], check=False)
+        print("[build_edl] wrote work/treatment.md (human-readable screenplay) - "
+              "review/edit it BEFORE rendering.")
+    except Exception as e:
+        print(f"[build_edl] (treatment skipped: {e})", file=sys.stderr)
+
     print("[build_edl] NOW REFINE: shot choice/order (Read work/thumbs/contact_sheet.jpg), "
-          "hero cutouts, transitions, captions. Then: render_edl.py --check.")
+          "hero cutouts, transitions, captions. Then re-run describe_edl.py, "
+          "then render_edl.py --check.")
 
 
 if __name__ == "__main__":
