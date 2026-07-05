@@ -1,0 +1,37 @@
+{
+  "$note": "Project settings for the auto-editor repo. Hooks give the agent auto-context each session (status.py) and protect raw media (guard_raw.py). To reduce permission prompts for the media toolchain, run /fewer-permission-prompts or add Bash(ffmpeg:*), Bash(ffprobe:*), Bash(yt-dlp:*), Bash(magick:*), Bash(sox:*) to permissions.allow yourself. AUTOEDITOR_PY = full path to Python 3.12 (its Scripts dir isn't on PATH).",
+  "env": {
+    "AUTOEDITOR_PY": "C:\\Users\\manan\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+  },
+  "permissions": {
+    "deny": [
+      "Write(assets/raw/**)",
+      "Edit(assets/raw/**)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"C:\\Users\\manan\\AppData\\Local\\Programs\\Python\\Python312\\python.exe\" \"${CLAUDE_PROJECT_DIR}/bin/status.py\"",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|NotebookEdit|Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"C:\\Users\\manan\\AppData\\Local\\Programs\\Python\\Python312\\python.exe\" \"${CLAUDE_PROJECT_DIR}/.claude/hooks/guard_raw.py\"",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}
