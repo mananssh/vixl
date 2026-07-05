@@ -1,31 +1,21 @@
-Copyright (c) 2026 Manan (mananssh). All Rights Reserved.
+MIT License
 
-This repository and all of its contents — including but not limited to source
-code, scripts, configuration, prompts, skill definitions, and documentation
-(collectively, the "Software") — are the proprietary and confidential work of
-the copyright holder.
+Copyright (c) 2026 Manan (mananssh)
 
-NO LICENSE IS GRANTED. No permission, express or implied, is given to any
-person to copy, reproduce, distribute, publish, sublicense, sell, rent, lease,
-modify, adapt, translate, create derivative works from, reverse engineer,
-decompile, disassemble, publicly display, publicly perform, or otherwise use
-the Software, in whole or in part, in any form or by any means, for any
-purpose, without the prior written consent of the copyright holder.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-Viewing this repository's source (e.g. because it is hosted on a public
-platform) does not constitute a grant of any rights under this notice. All
-rights not expressly granted are reserved.
-
-Unauthorized use, copying, or distribution of the Software, or any portion of
-it, is a violation of applicable copyright law and may result in civil and
-criminal penalties.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR
-IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-To request permission for any use not covered above, contact the copyright
-holder directly.
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

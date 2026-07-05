@@ -67,6 +67,5 @@ yt-dlp. All already installed on this machine — see [docs/PIPELINE.md](docs/PI
 
 ## License
 
-Copyright (c) 2026 Manan (mananssh). All Rights Reserved. This is proprietary,
-source-available code — no license is granted to copy, modify, or redistribute
-it. See [LICENSE](LICENSE) for the full notice.
+MIT © 2026 Manan (mananssh). Free to use, modify, and redistribute — just keep
+the copyright notice and give credit. See [LICENSE](LICENSE) for the full text.
