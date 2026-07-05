@@ -1,0 +1,8 @@
+{
+  "_note": "Caption styles referenced by EDL clip.caption.style. Rendered via ffmpeg drawtext with expansion=none (literal text; % is safe). 'font' points at a real .ttf shipped in assets/fonts (copied from Windows fonts for local use). Sizes are for a 1080-wide frame; they scale down automatically for previews.",
+  "_fonts_note": "Bundled fonts are copies of Windows system fonts for personal/local use. Replace with your own licensed fonts (e.g. Montserrat) for distribution.",
+  "impact":   { "font": "assets/fonts/Impact.ttf",     "fontsize": 96, "fontcolor": "white", "borderw": 8, "bordercolor": "black", "y": 0.72 },
+  "bold":     { "font": "assets/fonts/Arial-Bold.ttf", "fontsize": 84, "fontcolor": "white", "borderw": 6, "bordercolor": "black@0.9", "y": 0.74 },
+  "cinematic_title": { "font": "assets/fonts/SegoeUI-Light.ttf", "fontsize": 64, "fontcolor": "white@0.92", "borderw": 0, "shadowx": 2, "shadowy": 2, "shadowcolor": "black@0.5", "y": 0.82 },
+  "lower_third": { "font": "assets/fonts/SegoeUI-Semibold.ttf", "fontsize": 52, "fontcolor": "white", "borderw": 2, "bordercolor": "black@0.7", "shadowx": 1, "shadowy": 1, "shadowcolor": "black@0.6", "y": 0.86 }
+}

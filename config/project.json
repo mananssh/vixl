@@ -1,0 +1,53 @@
+{
+  "$schema_note": "Machine-readable locked settings for this project. This file WINS over prose in AGENTS.md if they ever disagree. Read by bin/status.py and bin/render_edl.py.",
+  "title": "project-0607",
+  "format": {
+    "width": 1080,
+    "height": 1920,
+    "aspect": "9:16",
+    "fps": 30,
+    "pix_fmt": "yuv420p"
+  },
+  "length": {
+    "target_min_seconds": 30,
+    "target_max_seconds": 60,
+    "strategy": "strongest_section",
+    "end_on": "downbeat"
+  },
+  "look": {
+    "vibe": "cinematic_moody",
+    "default_grade": "cine_teal_orange",
+    "letterbox": false,
+    "grain": 0.06,
+    "vignette": 0.25
+  },
+  "cutouts": {
+    "policy": "hero_only",
+    "max_cutout_clips": 5,
+    "model": "u2net"
+  },
+  "beats": {
+    "snap_cuts_to": "beat",
+    "prefer_downbeats_for_transitions": true,
+    "snap_tolerance_frames": 1
+  },
+  "render": {
+    "preview_height": 640,
+    "preview_crf": 30,
+    "final_crf": 18,
+    "video_codec": "libx264",
+    "audio_codec": "aac",
+    "audio_bitrate": "320k",
+    "loudnorm_I": -14,
+    "loudnorm_TP": -1.5,
+    "loudnorm_LRA": 11
+  },
+  "paths": {
+    "raw": "assets/raw",
+    "manifest": "work/manifest.json",
+    "beats": "work/beats.json",
+    "edl": "work/edl.json",
+    "previews": "work/previews",
+    "out": "out"
+  }
+}

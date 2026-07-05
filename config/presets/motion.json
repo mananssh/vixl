@@ -1,0 +1,10 @@
+{
+  "_note": "Motion presets referenced by EDL clip.motion.kind. render_edl.py reads defaults here; per-clip fields override. 'amount' is a zoom fraction; directions are center|in|out|left|right|up|down.",
+  "none":      { "kind": "none" },
+  "kenburns":  { "kind": "kenburns", "from": "center", "to": "in", "amount": 0.10, "prescale": 2.0 },
+  "kenburns_slow": { "kind": "kenburns", "from": "center", "to": "in", "amount": 0.06, "prescale": 2.0 },
+  "zoompunch": { "kind": "zoompunch", "amount": 0.20, "at": 0.0, "hold": 0.4 },
+  "speedramp": { "kind": "speedramp", "from_speed": 1.0, "to_speed": 0.5 },
+  "shake":     { "kind": "shake", "intensity": 10 },
+  "rgbsplit":  { "kind": "rgbsplit", "amount": 6 }
+}

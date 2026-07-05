@@ -1,0 +1,9 @@
+{
+  "_note": "Named colour grades. Each value is an ffmpeg -vf filter fragment applied to a normalized (already 9:16) clip. Referenced by EDL clip.grade and the color-grade skill. Edit a value here to change that look everywhere.",
+  "neutral": "eq=contrast=1.0:brightness=0.0:saturation=1.0",
+  "cine_teal_orange": "curves=preset=medium_contrast,eq=contrast=1.06:saturation=1.04:gamma=0.98,colorbalance=rs=-0.06:gs=-0.02:bs=0.06:rh=0.06:gh=0.02:bh=-0.06,vignette=PI/5,noise=alls=4:allf=t",
+  "warm_film": "curves=preset=lighter,eq=contrast=1.02:saturation=0.95:gamma=1.02,colorbalance=rm=0.08:gm=0.02:bm=-0.06:rh=0.06:bh=-0.04,vignette=PI/6,noise=alls=6:allf=t",
+  "punchy": "eq=contrast=1.14:saturation=1.28:brightness=0.02,unsharp=5:5:0.6",
+  "bw_contrast": "hue=s=0,curves=preset=strong_contrast,eq=contrast=1.12,vignette=PI/5",
+  "cool_night": "curves=preset=darker,eq=contrast=1.08:saturation=1.02:gamma=0.96,colorbalance=rs=-0.08:bs=0.10:rh=-0.02:bh=0.06,vignette=PI/5"
+}

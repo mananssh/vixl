@@ -1,0 +1,15 @@
+{
+  "_note": "Named transitions. 'xfade' is the ffmpeg xfade transition name; 'dur' is the default duration (seconds). 'cut' is special (no xfade, hard cut). Referenced by EDL clip.transition.type and the transitions skill.",
+  "cut":        { "xfade": null,          "dur": 0.0 },
+  "dissolve":   { "xfade": "fade",        "dur": 0.5 },
+  "whip_left":  { "xfade": "smoothleft",  "dur": 0.25 },
+  "whip_right": { "xfade": "smoothright", "dur": 0.25 },
+  "zoom":       { "xfade": "zoomin",      "dur": 0.4 },
+  "luma_wipe":  { "xfade": "smoothright", "dur": 0.5 },
+  "wipe_left":  { "xfade": "wipeleft",    "dur": 0.4 },
+  "radial":     { "xfade": "radial",      "dur": 0.5 },
+  "circle_open":{ "xfade": "circleopen",  "dur": 0.5 },
+  "dip_black":  { "xfade": "fadeblack",   "dur": 0.5 },
+  "dip_white":  { "xfade": "fadewhite",   "dur": 0.4 },
+  "pixelize":   { "xfade": "pixelize",    "dur": 0.4 }
+}
