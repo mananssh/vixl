@@ -1,0 +1,28 @@
+# Intermediates & renders — all regenerable
+work/
+out/
+
+# Source media is large and personal; keep it out of git.
+# (Remove these lines if you WANT to version your raw assets.)
+assets/raw/*
+!assets/raw/.gitkeep
+
+# Effect asset binaries can be large; keep structure, ignore contents by default.
+assets/sfx/*
+!assets/sfx/.gitkeep
+assets/overlays/*
+!assets/overlays/.gitkeep
+assets/fonts/*
+!assets/fonts/.gitkeep
+config/luts/*.cube
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.log

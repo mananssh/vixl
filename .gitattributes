@@ -1,0 +1,15 @@
+# Normalize line endings; keep shell/python LF-friendly on checkout.
+* text=auto
+*.py text eol=lf
+*.md text
+*.json text
+*.gitkeep text
+# Treat media as binary (belt-and-suspenders; most is gitignored anyway).
+*.mp4 binary
+*.mov binary
+*.mp3 binary
+*.wav binary
+*.jpg binary
+*.png binary
+*.cube binary
+*.ttf binary
