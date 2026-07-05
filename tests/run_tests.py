@@ -167,6 +167,32 @@ def test_atomic():
     check("no leftover .tmp files", not tmps, str(tmps))
 
 
+def test_describe(valid):
+    print("describe_edl (treatment):")
+    out = os.path.join(T, "treatment.md")
+    r = run([PY, os.path.join(BIN, "describe_edl.py"), valid, "--out", out, "--quiet"])
+    check("describe runs", r.returncode == 0, r.stderr[-200:])
+    txt = open(out, encoding="utf-8").read() if os.path.exists(out) else ""
+    check("treatment written", bool(txt))
+    check("treatment has screenplay body", "Shot-by-shot" in txt and "Treatment" in txt)
+    check("treatment has timecodes", "0:00" in txt)
+    check("treatment describes a transition", "cut" in txt or "crossfade" in txt)
+
+
+def test_cleanup():
+    print("cleanup (dry-run safety):")
+    r = run([PY, os.path.join(BIN, "cleanup.py")])  # dry-run, no --yes
+    check("cleanup dry-run runs", r.returncode == 0, r.stderr[-200:])
+    safe = ("DRY-RUN" in r.stdout) or ("already clean" in r.stdout)
+    check("cleanup is dry-run by default (no deletion)", safe, r.stdout[-200:])
+    # every removal-target line (indented "    [dir ]/[file]") must be inside work/
+    targets = [ln for ln in r.stdout.splitlines()
+               if ln.startswith("    [dir ]") or ln.startswith("    [file]")]
+    all_in_work = all("work\\" in ln or "work/" in ln for ln in targets)
+    check("cleanup only ever targets work/ (never raw/out)", all_in_work,
+          "; ".join(ln.strip() for ln in targets if not ("work\\" in ln or "work/" in ln)))
+
+
 def test_guard():
     print("raw-media guard:")
     raw_del = "rm -" + "rf assets/raw/x.mp4"
@@ -199,6 +225,8 @@ def main():
     test_render(valid)
     test_cache(valid)
     test_atomic()
+    test_describe(valid)
+    test_cleanup()
     test_guard()
     print("=" * 60)
     print(f" {PASS} passed, {FAIL} failed")

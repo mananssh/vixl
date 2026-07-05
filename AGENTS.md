@@ -51,9 +51,11 @@ Environment specifics (paths, gotchas) → **[docs/PIPELINE.md](docs/PIPELINE.md
    (Edit Decision List) JSON at `work/edl.json`. Change the edit by editing the
    EDL and re-rendering — never by hand-crafting one-off ffmpeg commands you
    can't reproduce. See [§4](#4-the-edl-the-heart-of-the-repo).
-5. **Preview before final.** Always render a fast low-res preview and get sign-off
-   before committing to a full-quality render (which is slow). See the
-   `render` skill.
+5. **Plan on paper, then preview, then final.** Before rendering any clips, emit
+   the human-readable **treatment** (`work/treatment.md` via `describe_edl.py`) and
+   get the user's notes — editing prose is free, re-encoding isn't. Then render a
+   fast low-res preview and get sign-off before the slow full-quality final. See the
+   `edit-plan` and `render` skills.
 6. **Cuts land on beats.** Unless deliberately doing a "float" (a held shot over
    a musical swell), every cut/transition midpoint should snap to a beat or
    downbeat from `work/beats.json`.
@@ -68,6 +70,10 @@ Environment specifics (paths, gotchas) → **[docs/PIPELINE.md](docs/PIPELINE.md
 ## 2. The pipeline at a glance
 
 ```
+┌──────────────┐   interview the user → work/brief.json
+│creative-brief│   (subject, must-haves, tone, captions, length)   [do first]
+└──────────────┘
+      │
  assets/raw/  +  song
       │
       ▼
@@ -83,7 +89,7 @@ Environment specifics (paths, gotchas) → **[docs/PIPELINE.md](docs/PIPELINE.md
       ▼
 ┌─────────────┐   the "editor's brain": pick + order shots, assign
 │  edit-plan  │   durations to beats, choose transitions/effects/grade
-└─────────────┘   → work/edl.json
+└─────────────┘   → work/edl.json  +  work/treatment.md (screenplay)
       │
       ├──────────────┬───────────────┬──────────────┐
       ▼              ▼               ▼              ▼
@@ -93,9 +99,16 @@ Environment specifics (paths, gotchas) → **[docs/PIPELINE.md](docs/PIPELINE.md
       │              │               │              │
       └──────────────┴───────┬───────┴──────────────┘
                              ▼
+                  ┌────────────────────┐  read the treatment, take notes,
+                  │ treatment sign-off │  edit the EDL — BEFORE rendering
+                  └────────────────────┘  (work/treatment.md)
+                             │
+                             ▼
                       ┌────────────┐  transitions + audio-post applied here
                       │   render   │  → work/previews/*.mp4  → out/final.mp4
                       └────────────┘
+
+ cleanup (manual, any time): wipe work/ intermediates → back to raw + out only
 ```
 
 Read the full walkthrough in **[docs/PIPELINE.md](docs/PIPELINE.md)**.
@@ -112,9 +125,10 @@ what to run.
 
 | Skill | Use it when… |
 |---|---|
+| **creative-brief** | Starting a fresh video — interview the user (subject, must-haves, tone, captions, length) into `work/brief.json` before any editing. **Do this first.** |
 | **ingest-media** | New media is dropped in `assets/raw/` and needs cataloging/probing. |
 | **beat-map** | You have the song and need beat/tempo/section data to cut to. |
-| **edit-plan** | You have the manifest + beat map and need to design the edit (build the EDL). This is the editor's brain. |
+| **edit-plan** | You have the manifest + beat map and need to design the edit (build the EDL). This is the editor's brain. It also emits a human-readable **treatment** (`work/treatment.md`) for sign-off. |
 | **color-grade** | Choosing/applying a look (cinematic teal-orange, warm, punchy, B&W…). |
 | **subject-cutout** | Popping a person off their background for a hero shot / overlay. |
 | **transitions** | Choosing and wiring transitions between shots (dissolve, whip-pan, zoom, luma-wipe…). |
@@ -122,6 +136,7 @@ what to run.
 | **sfx-overlays** | Captions, meme/reaction overlays, sound effects, emphasis hits (Chipfat energy). |
 | **audio-post** | Mixing the track, ducking under VO, EQ, fades, loudness normalization. |
 | **render** | Producing the preview or the final export. |
+| **cleanup** | *Manual only.* Reset to input+output — wipe intermediates under `work/`. Only when the user asks. |
 
 ---
 
@@ -207,9 +222,11 @@ A render is "done" when:
 ## 8. Tools & tests
 
 Tools in `bin/`: `probe_media.py` (ingest+thumbnails+metrics), `detect_beats.py`,
-`build_edl.py` (draft EDL — won't clobber an existing one without `--force`),
-`match_exposure.py` (cohesion), `render_edl.py` (validate/preview/final, cached,
-atomic), `cutout.py`, `status.py`.
+`build_edl.py` (draft EDL — won't clobber an existing one without `--force`; reads
+`work/brief.json`; auto-writes the treatment), `describe_edl.py` (EDL →
+`work/treatment.md` human-readable screenplay for sign-off), `match_exposure.py`
+(cohesion), `render_edl.py` (validate/preview/final, cached, atomic), `cutout.py`,
+`cleanup.py` (manual reset to input+output; dry-run by default), `status.py`.
 
 **After changing any tool, run `python tests/run_tests.py`** — it generates
 synthetic media and asserts the whole pipeline (probe, beats, strict validation,
