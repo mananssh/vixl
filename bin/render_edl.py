@@ -25,7 +25,7 @@ except Exception:
     pass
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-IMAGE_EXT = (".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tif", ".tiff", ".heic", ".heif")
+IMAGE_EXT = (".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tif", ".tiff", ".heic", ".heif", ".avif")
 
 VALID_FRAMING = {"auto", "fill", "blurpad"}
 VALID_MOTION_KINDS = {"none", "kenburns", "zoompunch", "shake", "rgbsplit", "speedramp"}
@@ -57,6 +57,26 @@ def rel(p):
 
 def is_image(path):
     return os.path.splitext(path)[1].lower() in IMAGE_EXT
+
+
+_AVIF_CACHE_DIR = os.path.join(ROOT, "work", "_avif_png")
+
+
+def ensure_decodable(path):
+    """ffmpeg's image2-demuxer options (-loop 1 -framerate N) don't work on .avif,
+    which ffmpeg reads via the mov/mp4 demuxer instead. Decode once to a cached
+    PNG (content-addressed by source path) and use that for -loop inputs."""
+    if os.path.splitext(path)[1].lower() != ".avif":
+        return path
+    os.makedirs(_AVIF_CACHE_DIR, exist_ok=True)
+    key = hashlib.sha1(path.encode("utf-8")).hexdigest()[:16]
+    png = os.path.join(_AVIF_CACHE_DIR, key + ".png")
+    if not os.path.exists(png):
+        r = subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", path, png],
+                            capture_output=True, text=True)
+        if r.returncode != 0 or not os.path.exists(png):
+            raise RuntimeError(f"avif decode failed for {rel(path)}: {r.stderr[-400:]}")
+    return png
 
 
 _probe_cache = {}
@@ -287,6 +307,7 @@ def caption_filter(cap, presets, w, h):
     if not cap or not cap.get("text"):
         return ""
     style = presets["captions"].get(cap.get("style", "impact"), {})
+    scale = w / 1080.0  # preset sizes are tuned for a 1080-wide frame; scale for preview
 
     def g(key, default=None):
         return cap.get(key, style.get(key, default))
@@ -300,17 +321,17 @@ def caption_filter(cap, presets, w, h):
     parts.append(f"fontcolor={g('fontcolor', 'white')}")
     bw = g("borderw", 0)
     if bw:
-        parts.append(f"borderw={bw}")
+        parts.append(f"borderw={max(1, round(bw * scale))}")
         parts.append(f"bordercolor={g('bordercolor', 'black')}")
     sx, sy = g("shadowx"), g("shadowy")
     if sx is not None and sy is not None:
-        parts.append(f"shadowx={sx}")
-        parts.append(f"shadowy={sy}")
+        parts.append(f"shadowx={round(sx * scale)}")
+        parts.append(f"shadowy={round(sy * scale)}")
         parts.append(f"shadowcolor={g('shadowcolor', 'black@0.5')}")
     yfrac = g("y", 0.74)
     parts.append("x=(w-text_w)/2")
     # pop animation: scale font up briefly at start via a stepped size expr
-    base_size = int(g("fontsize", 84))
+    base_size = max(8, round(g("fontsize", 84) * scale))
     start, end = cap.get("start"), cap.get("end")
     if cap.get("pop") and start is not None:
         # overshoot then settle over ~0.18s
@@ -406,7 +427,7 @@ def normalize_clip(clip, idx, cfg, presets, out_path, preview=False):
                        "-t", f"{dur:.3f}", "-i", src]
         else:
             inputs += ["-framerate", str(fps), "-loop", "1", "-t", f"{dur:.3f}",
-                       "-i", src]
+                       "-i", ensure_decodable(src)]
     else:
         tin = float(clip.get("in", 0.0))
         tout = clip.get("out")
