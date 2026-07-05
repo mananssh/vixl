@@ -64,3 +64,9 @@ docs/                pipeline + style + cookbook
 
 ffmpeg/ffprobe, Python 3.12 + `librosa` + `rembg`+`onnxruntime`, ImageMagick, sox,
 yt-dlp. All already installed on this machine — see [docs/PIPELINE.md](docs/PIPELINE.md).
+
+## License
+
+Copyright (c) 2026 Manan (mananssh). All Rights Reserved. This is proprietary,
+source-available code — no license is granted to copy, modify, or redistribute
+it. See [LICENSE](LICENSE) for the full notice.
